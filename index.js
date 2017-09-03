@@ -24,7 +24,7 @@ app.use('/tasks', tasks.routes);
 app.use('/users', users.routes);
 
 app.get('/', (req, res) => {
-  res.json({status: 'online'});
+  res.json({env: process.env.NODE_ENV});
 });
 
 app.listen(3000, () => {
