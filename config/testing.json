@@ -1,0 +1,7 @@
+{
+  "host": "localhost",
+  "db_name": "nodetodo_test_db",
+  "username": "nodetodo",
+  "password": "supersecret",
+  "logging": "false"
+}

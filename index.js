@@ -1,8 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
+const config = require('config');
 
-const db = require('./db');
+const db = require('./database');
 const tasks = require('./app/tasks');
 const users = require('./app/users');
 
@@ -11,7 +12,9 @@ const app = express();
 
 // database init
 db.authenticate()
-  .then(() => console.log('Connection has been established successfully'))
+  .then(() => 
+    config.util.getEnv('NODE_ENV') !== 'testing' ?
+    console.log('Connection has been established successfully') : null)
   .catch((err) => console.error('Unabled to connect to the database: ', err));
 
 // Middleware
@@ -30,3 +33,6 @@ app.get('/', (req, res) => {
 app.listen(3000, () => {
   console.log('Nodetodo listening on port 3000');
 });
+
+
+module.exports = app;
