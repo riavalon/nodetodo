@@ -6,7 +6,9 @@ const Task = require('./models');
 
 router
   .get('/', (req, res) => {
-    Task.findAll().then(tasks => {
+    const {userId} = req.query;
+    if (!userId) return res.status(400).json({error: 'Must specify user id'});
+    Task.findAll({where: {userId}}).then(tasks => {
       res.json(tasks);
     });
   })
@@ -14,7 +16,11 @@ router
 router.route('/:id')
   .get((req, res) => {
     const {id} = req.params;
-    Task.findById(id).then(task => {
+    const {userId} = req.query;
+    if (!userId) return res.status(400).json({error: 'Must specify user id'});
+    Task.findOne({
+      where: {id, userId}
+    }).then(task => {
       res.json(task);
     });
   })
@@ -22,7 +28,11 @@ router.route('/:id')
   .put((req, res) => {
     const {id} = req.params;
     const {title, complete} = req.body;
-    Task.findById(id).then(task => {
+    const {userId} = req.query;
+    if (!userId) return res.status(400).json({error: 'Must specify user id'});
+    Task.findOne({
+      where: {id, userId},
+    }).then(task => {
       task.update({
         title: title ? title : task.dataValues.title,
         complete: complete ? complete : task.dataValues.complete,
@@ -32,7 +42,11 @@ router.route('/:id')
 
   .delete((req, res) => {
     const {id} = req.params;
-    Task.findById(id).then(task => {
+    const {userId} = req.query;
+    if (!userId) return res.status(400).json({error: 'Must specify user id'});
+    Task.findOne({
+      where: {id, userId},
+    }).then(task => {
       task.destroy();
       res.send({result: true});
     });
@@ -40,8 +54,9 @@ router.route('/:id')
 
 
 router.post('/new', (req, res) => {
-  const {title, complete} = req.body;
-  Task.create({title, complete})
+  const {title, complete, userId} = req.body;
+  if (!userId) return res.status(400).json({error: 'Must specify user id'});
+  Task.create({title, complete, userId})
     .then(task => res.send(task))
     .catch(err => res.send(err));
 });

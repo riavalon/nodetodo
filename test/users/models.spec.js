@@ -32,11 +32,11 @@ describe('User Resource Model', () => {
   describe('User creation', () => {
     it('should have an email and password hash', done => {
       User.create({
-        email,
+        email: `1${email}`,
         pwdHash,
       }).then(user => {
         expect(user).not.to.be.null;
-        expect(user.email).to.equal(email);
+        expect(user.email).to.equal(`1${email}`);
         expect(user.pwdHash).to.equal(pwdHash);
         done();
       });
